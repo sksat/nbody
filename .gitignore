@@ -27,6 +27,7 @@
 *.lib
 
 # Executables
+nbody
 *.exe
 *.out
 *.app
