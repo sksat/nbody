@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <vector>
 #include <chrono>
@@ -15,6 +16,10 @@ struct simdata_t {
 	Float time; // simulation time
 	std::vector<planet_t> planet;
 };
+
+constexpr Float time_max	= 1000.0;
+constexpr Float dt			= 0.001;
+constexpr size_t percentage_interval	= time_max / (dt*100) ;
 
 // util
 void err_exit(const std::string& msg);
@@ -77,4 +82,23 @@ void load_data(const std::string& fname, simdata_t& data){
 }
 
 void main_loop(simdata_t &sim){
+	size_t loop_count = 0;
+	while(true){
+		if(sim.time > time_max) break;
+
+		if(loop_count % percentage_interval == 0){
+			std::cout << std::setw(3) << loop_count/percentage_interval << "%\t"
+				<< "time: " << std::setw(10) << sim.time << std::endl;
+		}
+
+		// time step
+		for(size_t n1=0;n1<sim.num;n1++){
+			// 重力相互作用なんてなかったんや
+			auto& p1 = sim.planet[n1];
+			p1.pos = p1.vel * dt;
+		}
+
+		sim.time += dt;
+		loop_count++;
+	}
 }
