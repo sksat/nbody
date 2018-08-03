@@ -1,7 +1,7 @@
 TARGET	= nbody
 OBJS	= main.o
 
-CXX		= clang++
+CXX		= g++
 CXXFLAGS= -std=c++1z -Wall -O3
 
 PLUMMER_NUM	= 1000
@@ -12,6 +12,8 @@ RUN_DEP		= $(TARGET) $(INIT_DAT)
 RUN_FLAGS	= $(INIT_DAT)
 
 PLOT_GIF	= out.gif
+D_ANIM		= 1
+ANIM_SIZE	= 10
 
 %.o : %.cc
 	$(CXX) -c $< $(CXXFLAGS) -o $@
@@ -25,13 +27,17 @@ run: $(RUN_DEP)
 
 plot: $(PLOT_GIF)
 
+replot: clean_gif plot
+
 full: clean run plot
 
-clean:
+clean: clean_gif
 	rm -rf $(TARGET) mk_plummer
 	rm -rf *.o
 	rm -rf *.dat
-	rm -rf *.gif
+
+clean_gif:
+	rm -rf $(PLOT_GIF)
 
 $(TARGET): $(OBJS)
 	$(CXX) -o $@ $(OBJS)
@@ -44,4 +50,4 @@ $(PLUMMER_DAT): mk_plummer
 	./$< -n $(PLUMMER_NUM) > $@
 
 $(PLOT_GIF):
-	gnuplot anim.gp
+	gnuplot -c anim.gp $(D_ANIM) $(ANIM_SIZE)

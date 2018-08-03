@@ -4,5 +4,6 @@ set output "out.gif"
 set size ratio 1
 n0 = 0
 n1 = "`ls out-*.dat | tail -n1 | sed -e 's/[^0-9]//g'`"
-dn = 1
+dn = @ARG1
+size = @ARG2
 load "plot.plt"
