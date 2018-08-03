@@ -25,7 +25,7 @@ run: $(RUN_DEP)
 
 plot: $(PLOT_GIF)
 
-run_plot: run plot
+full: clean run plot
 
 clean:
 	rm -rf $(TARGET) mk_plummer

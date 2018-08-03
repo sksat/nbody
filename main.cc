@@ -4,12 +4,13 @@
 #include <fstream>
 #include <vector>
 #include <chrono>
+#include <cmath>
 #include <sksat/math/vector.hpp>
 
 using Float = double; // 浮動小数点数
 
 struct planet_t {
-	sksat::math::vector<Float> pos, vel, acc;
+	sksat::math::vector<Float> pos, vel, acc[2];
 	Float mass;
 };
 
@@ -19,8 +20,8 @@ struct simdata_t {
 	std::vector<planet_t> planet;
 };
 
-constexpr Float time_max				= 1000.0;
-constexpr Float dt						= 0.001;
+constexpr Float time_max				= 10.0;
+constexpr Float dt						= 0.0001;
 constexpr size_t percentage_interval	= time_max / (dt*100) ;
 constexpr size_t save_interval			= 100;
 
@@ -106,6 +107,8 @@ void save_data(const size_t& count, const simdata_t& data){
 
 void main_loop(simdata_t &sim){
 	size_t loop_count = 0;
+	bool lf_flag = 0;
+
 	while(true){
 		if(sim.time > time_max) break;
 
@@ -114,11 +117,32 @@ void main_loop(simdata_t &sim){
 				<< "time: " << std::setw(10) << sim.time << std::endl;
 		}
 
-		// time step
+		// calc acc
 		for(size_t n1=0;n1<sim.num;n1++){
-			// 重力相互作用なんてなかったんや
 			auto& p1 = sim.planet[n1];
-			p1.pos += p1.vel * dt;
+			auto& acc= p1.acc[lf_flag];
+			acc = {};
+			for(size_t n2=0;n2<sim.num;n2++){
+				if(n1 == n2) continue;
+				auto& p2 = sim.planet[n2];
+				auto r = p2.pos - p1.pos;
+				auto r2= r.x*r.x + r.y*r.y + r.z*r.z;
+				auto r_= std::sqrt(r2);
+				if(r_ == 0.0) continue;
+				acc += r * (p2.mass / (r2 * r_));
+			}
+		}
+
+		// time step
+		for(size_t n=0;n<sim.num;n++){
+			auto& p = sim.planet[n];
+
+			//p.vel += p.acc[lf_flag] * dt;
+			//p.pos += p.vel * dt;
+
+			// leap flog
+			p.pos += p.vel * dt + 0.5 * p.acc[lf_flag] * dt * dt;
+			p.vel += 0.5 * (p.acc[!lf_flag] + p.acc[lf_flag]) * dt;
 		}
 
 		if(loop_count % save_interval == 0){
@@ -127,5 +151,6 @@ void main_loop(simdata_t &sim){
 
 		sim.time += dt;
 		loop_count++;
+		lf_flag = !lf_flag;
 	}
 }
