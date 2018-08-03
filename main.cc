@@ -10,6 +10,7 @@ using Float = double; // 浮動小数点数
 
 struct planet_t {
 	sksat::math::vector<Float> pos, vel, acc;
+	Float mass;
 };
 
 struct simdata_t {
@@ -21,7 +22,7 @@ struct simdata_t {
 constexpr Float time_max				= 1000.0;
 constexpr Float dt						= 0.001;
 constexpr size_t percentage_interval	= time_max / (dt*100) ;
-constexpr size_t save_interval			= 1000;
+constexpr size_t save_interval			= 100;
 
 // util
 void err_exit(const std::string& msg);
@@ -77,7 +78,8 @@ void load_data(const std::string& fname, simdata_t& data){
 	std::cout << "loading...\t";
 	for(size_t n=0;n<data.num;n++){
 		auto& p = data.planet[n];
-		ifs >> p.pos.x >> p.pos.y >> p.pos.z
+		ifs >> p.mass
+			>> p.pos.x >> p.pos.y >> p.pos.z
 			>> p.vel.x >> p.vel.y >> p.vel.z;
 		if(ifs.fail()) err_exit("failed");
 	}
@@ -94,8 +96,9 @@ void save_data(const size_t& count, const simdata_t& data){
 		<< data.time << std::endl;
 
 	for(size_t n=0;n<data.num;n++){
-		auto& p = data.planet[n];
-		ofs << p.pos.x << " " << p.pos.y << " " << p.pos.z << " "
+		const auto& p = data.planet[n];
+		ofs << p.mass << " "
+			<< p.pos.x << " " << p.pos.y << " " << p.pos.z << " "
 			<< p.vel.x << " " << p.vel.y << " " << p.vel.z
 			<< std::endl;
 	}
@@ -115,7 +118,7 @@ void main_loop(simdata_t &sim){
 		for(size_t n1=0;n1<sim.num;n1++){
 			// 重力相互作用なんてなかったんや
 			auto& p1 = sim.planet[n1];
-			p1.pos = p1.vel * dt;
+			p1.pos += p1.vel * dt;
 		}
 
 		if(loop_count % save_interval == 0){
