@@ -1,5 +1,6 @@
 #include <iostream>
 #include <iomanip>
+#include <sstream>
 #include <fstream>
 #include <vector>
 #include <chrono>
@@ -17,14 +18,16 @@ struct simdata_t {
 	std::vector<planet_t> planet;
 };
 
-constexpr Float time_max	= 1000.0;
-constexpr Float dt			= 0.001;
+constexpr Float time_max				= 1000.0;
+constexpr Float dt						= 0.001;
 constexpr size_t percentage_interval	= time_max / (dt*100) ;
+constexpr size_t save_interval			= 1000;
 
 // util
 void err_exit(const std::string& msg);
 
 void load_data(const std::string& fname, simdata_t& data);
+void save_data(const size_t &count, const simdata_t& data);
 void main_loop(simdata_t& sim);
 
 int main(int argc, char **argv){
@@ -81,6 +84,23 @@ void load_data(const std::string& fname, simdata_t& data){
 	std::cout<<"finished"<<std::endl;
 }
 
+void save_data(const size_t& count, const simdata_t& data){
+	std::stringstream ss;
+	ss << "out-"
+		<< std::setfill('0') << std::setw(10) << count
+		<< ".dat";
+	std::ofstream ofs(ss.str());
+	ofs << data.num << std::endl
+		<< data.time << std::endl;
+
+	for(size_t n=0;n<data.num;n++){
+		auto& p = data.planet[n];
+		ofs << p.pos.x << " " << p.pos.y << " " << p.pos.z << " "
+			<< p.vel.x << " " << p.vel.y << " " << p.vel.z
+			<< std::endl;
+	}
+}
+
 void main_loop(simdata_t &sim){
 	size_t loop_count = 0;
 	while(true){
@@ -96,6 +116,10 @@ void main_loop(simdata_t &sim){
 			// 重力相互作用なんてなかったんや
 			auto& p1 = sim.planet[n1];
 			p1.pos = p1.vel * dt;
+		}
+
+		if(loop_count % save_interval == 0){
+			save_data(loop_count/save_interval, sim);
 		}
 
 		sim.time += dt;
