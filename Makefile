@@ -23,6 +23,7 @@ default:
 	make $(TARGET)
 
 run: $(RUN_DEP)
+	make clean_data
 	./$(TARGET) $(RUN_FLAGS)
 
 plot: $(PLOT_GIF)
@@ -35,6 +36,9 @@ clean: clean_gif
 	rm -rf $(TARGET) mk_plummer
 	rm -rf *.o
 	rm -rf *.dat
+
+clean_data:
+	rm -rf out*.dat
 
 clean_gif:
 	rm -rf $(PLOT_GIF)
