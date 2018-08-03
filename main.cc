@@ -20,7 +20,7 @@ struct simdata_t {
 	std::vector<planet_t> planet;
 };
 
-constexpr Float time_max				= 10.0;
+constexpr Float time_max				= 1000.0;
 constexpr Float dt						= 0.0001;
 constexpr size_t percentage_interval	= time_max / (dt*100) ;
 constexpr size_t save_interval			= 100;
@@ -118,10 +118,12 @@ void main_loop(simdata_t &sim){
 		}
 
 		// calc acc
+		#pragma omp parallel for
 		for(size_t n1=0;n1<sim.num;n1++){
 			auto& p1 = sim.planet[n1];
 			auto& acc= p1.acc[lf_flag];
 			acc = {};
+			#pragma omp parallel for
 			for(size_t n2=0;n2<sim.num;n2++){
 				if(n1 == n2) continue;
 				auto& p2 = sim.planet[n2];
@@ -134,6 +136,7 @@ void main_loop(simdata_t &sim){
 		}
 
 		// time step
+		#pragma omp parallel for
 		for(size_t n=0;n<sim.num;n++){
 			auto& p = sim.planet[n];
 

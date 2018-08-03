@@ -2,7 +2,8 @@ TARGET	= nbody
 OBJS	= main.o
 
 CXX		= g++
-CXXFLAGS= -std=c++1z -Wall -O3
+CXXFLAGS= -std=c++1z -Wall -O3 -fopenmp
+LDFLAGS	= -fopenmp
 
 PLUMMER_NUM	= 1000
 PLUMMER_DAT	= plummer-$(PLUMMER_NUM).dat
@@ -44,7 +45,7 @@ clean_gif:
 	rm -rf $(PLOT_GIF)
 
 $(TARGET): $(OBJS)
-	$(CXX) -o $@ $(OBJS)
+	$(CXX) -o $@ $(OBJS) $(LDFLAGS)
 
 mk_plummer.cc:
 	wget http://jun.artcompsci.org/kougi/keisan_tenmongakuII/programs/simpletree/mk_plummer.C
