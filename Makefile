@@ -5,7 +5,8 @@ CXX			= g++
 CXXFLAGS	= -std=c++1z -Wall -O3 -fopenmp
 LDFLAGS		= -fopenmp
 
-FMT			= out-%010d
+OUT_DIR		= out/
+FMT			= $(OUT_DIR)%010d
 
 FMT_DAT		= $(FMT).dat
 FMT_POV		= $(FMT).pov
@@ -21,12 +22,12 @@ INIT_DAT	= $(PLUMMER_DAT)
 RUN_DEP		= $(TARGET) $(INIT_DAT)
 RUN_FLAGS	= $(INIT_DAT)
 
-PLOT_GIF	= out.gif
+PLOT_GIF	= $(OUT_DIR)plot.gif
 D_ANIM		= 1
 ANIM_SIZE	= 10
 
-POVRAY_GIF	= out-povray.gif
-POVRAY_MP4	= out-povray.mp4
+POVRAY_GIF	= $(OUT_DIR)povray.gif
+POVRAY_MP4	= $(OUT_DIR)povray.mp4
 
 %.o : %.cc
 	$(CXX) -c $< $(CXXFLAGS) -o $@
@@ -62,7 +63,7 @@ clean: clean_gif
 	rm -rf *.dat
 
 clean_data:
-	rm -rf out*.dat
+	rm -rf $(OUT_DIR)*.dat
 
 clean_gif:
 	rm -rf $(PLOT_GIF)
@@ -76,6 +77,9 @@ mk_plummer.cc:
 
 $(PLUMMER_DAT): ./mk_plummer
 	$< -n $(PLUMMER_NUM) > $@
+
+$(OUT_DIR):
+	mkdir $@
 
 $(PLOT_GIF):
 	gnuplot -c anim.gp $(D_ANIM) $(ANIM_SIZE)
