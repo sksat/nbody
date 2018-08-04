@@ -33,6 +33,10 @@ replot: clean_gif plot
 
 full: clean run plot
 
+render:
+	./dat2pov.rb
+	./render.rb
+
 clean: clean_gif
 	rm -rf $(TARGET) mk_plummer
 	rm -rf *.o
