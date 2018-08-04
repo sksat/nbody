@@ -51,6 +51,8 @@ replot: clean_gif plot
 
 full: clean run plot
 
+autorun: run pov render gif mp4
+
 pov:
 	$(DAT2POV)
 
