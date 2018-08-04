@@ -1,6 +1,8 @@
 mk_plummer.cc
 *.dat
+*.pov
 *.gif
+*.mp4
 
 # Prerequisites
 *.d

@@ -2,7 +2,14 @@
 
 require 'parallel'
 
-num = `ls out-*.dat | tail -n1 | sed -e 's/[^0-9]//g'`.to_i
+num = 0
+
+if ARGV.size() == 0
+	num = `ls out-*.dat | tail -n1 | sed -e 's/[^0-9]//g'`.to_i
+else
+	num = ARGV[0].to_i
+end
+
 Parallel.each([*0..num], progress: "converting dat->pov", in_processes: 4) {|n|
 	fname_base = "out-" + ("%010d" % n)
 	pov = fname_base + ".pov"
