@@ -13,7 +13,7 @@ light_source{
 	camera{
 		location p
 		angle a
-		look_at 1
+		look_at l
 	}
 #end
 

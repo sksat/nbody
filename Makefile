@@ -55,7 +55,6 @@ pov:
 	$(DAT2POV)
 
 render:
-	make pov
 	$(RENDER)
 
 gif: $(POVRAY_GIF)

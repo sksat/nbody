@@ -8,14 +8,14 @@ nproc = `nproc`.to_i
 puts "nproc: #{nproc}"
 
 if ARGV.size() == 0
-	num = `find out -type f -name "*.dat" | tail -n1 | sed -e 's/[^0-9]//g'`.to_i
+	num = `find out -type f -name "*.dat" | sort | tail -n1 | sed -e 's/[^0-9]//g'`.to_i
 else
 	num = ARGV[0].to_i
 end
 
 puts "num: #{num}"
 
-Parallel.each([*0..num], progress: "converting dat->pov", in_processes: nproc) {|n|
+Parallel.each([*0..num], progress: "rendering pov", in_processes: nproc) {|n|
 	fname_base = "out/" + ("%010d" % n)
 	pov = fname_base + ".pov"
 	png = fname_base + ".png"
