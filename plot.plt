@@ -1,5 +1,5 @@
 if(exist("n")==0 || n<0) n=n0
-frame = sprintf("out-%010d.dat", n)
+frame = sprintf("out/%010d.dat", n)
 cmd = sprintf("head -n1 %s", frame)
 set xrange[-size/2:size/2]
 set yrange[-size/2:size/2]

@@ -1,4 +1,4 @@
-#!/bin/ruby
+#!/usr/bin/ruby
 require 'parallel'
 
 def dat2pov(fname)
@@ -34,9 +34,10 @@ def dat2pov(fname)
 end
 
 if ARGV.size() == 0 then
-	num = `ls out-*.dat | tail -n1 | sed -e 's/[^0-9]//g'`.to_i
+	num = `find out -type f -name "*dat" | tail -n1 | sed -e 's/[^0-9]//g'`.to_i
+	puts "num: #{num}"
 	Parallel.each([*0..num], progress: "converting dat->pov", in_processes: 4) {|n|
-		fname = "out-" + ("%010d" % n) + ".dat"
+		fname = "out/" + ("%010d" % n) + ".dat"
 		dat2pov fname
 	}
 	print "done."

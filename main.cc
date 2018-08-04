@@ -20,10 +20,11 @@ struct simdata_t {
 	std::vector<planet_t> planet;
 };
 
-constexpr Float time_max				= 1000.0;
-constexpr Float dt						= 0.0001;
-constexpr size_t percentage_interval	= time_max / (dt*100) ;
-constexpr size_t save_interval			= 100;
+Float time_max		= 1000.0;
+Float dt		= 0.0001;
+
+std::string out_dir	= "out/";
+int num_digits		= 10;
 
 // util
 void err_exit(const std::string& msg);
@@ -34,7 +35,11 @@ void main_loop(simdata_t& sim);
 
 int main(int argc, char **argv){
 	// init
-	if(argc != 2) return -1;
+	if(argc != 6) return -1;
+	out_dir = argv[2];
+	num_digits = std::atoi(argv[3]);
+	dt = std::atof(argv[4]);
+	time_max = std::atof(argv[5]);
 
 	// load data
 	simdata_t sim;
@@ -89,8 +94,8 @@ void load_data(const std::string& fname, simdata_t& data){
 
 void save_data(const size_t& count, const simdata_t& data){
 	std::stringstream ss;
-	ss << "out-"
-		<< std::setfill('0') << std::setw(10) << count
+	ss << out_dir
+		<< std::setfill('0') << std::setw(num_digits) << count
 		<< ".dat";
 	std::ofstream ofs(ss.str());
 	ofs << data.num << std::endl
@@ -108,6 +113,9 @@ void save_data(const size_t& count, const simdata_t& data){
 void main_loop(simdata_t &sim){
 	size_t loop_count = 0;
 	bool lf_flag = 0;
+
+	const size_t percentage_interval= time_max / (dt*100);
+	const size_t save_interval		= 100;
 
 	while(true){
 		if(sim.time > time_max) break;

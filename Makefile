@@ -6,7 +6,8 @@ CXXFLAGS	= -std=c++1z -Wall -O3 -fopenmp
 LDFLAGS		= -fopenmp
 
 OUT_DIR		= out/
-FMT			= $(OUT_DIR)%010d
+NUM_DIGITS	= 10
+FMT			= $(OUT_DIR)%0$(NUM_DIGITS)d
 
 FMT_DAT		= $(FMT).dat
 FMT_POV		= $(FMT).pov
@@ -15,12 +16,16 @@ FMT_PNG		= $(FMT).png
 DAT2POV		= ./dat2pov.rb
 RENDER		= ./render.rb
 
+MK_PLUMMER	= ./mk_plummer
 PLUMMER_NUM	= 1000
 PLUMMER_DAT	= plummer-$(PLUMMER_NUM).dat
 
+DT			= 0.0001
+TIME_MAX	= 100.0
+
 INIT_DAT	= $(PLUMMER_DAT)
-RUN_DEP		= $(TARGET) $(INIT_DAT)
-RUN_FLAGS	= $(INIT_DAT)
+RUN_DEP		= $(TARGET) $(INIT_DAT) $(OUT_DIR)
+RUN_FLAGS	= $(INIT_DAT) $(OUT_DIR) $(NUM_DIGITS) $(DT) $(TIME_MAX)
 
 PLOT_GIF	= $(OUT_DIR)plot.gif
 D_ANIM		= 1
@@ -57,13 +62,12 @@ gif: $(POVRAY_GIF)
 
 mp4: $(POVRAY_MP4)
 
-clean: clean_gif
+clean: clean_gif clean_data
 	rm -rf $(TARGET) mk_plummer
 	rm -rf *.o
-	rm -rf *.dat
 
 clean_data:
-	rm -rf $(OUT_DIR)*.dat
+	find $(OUT_DIR) -type f -name "*.dat" | xargs rm -f
 
 clean_gif:
 	rm -rf $(PLOT_GIF)
@@ -75,8 +79,11 @@ mk_plummer.cc:
 	wget http://jun.artcompsci.org/kougi/keisan_tenmongakuII/programs/simpletree/mk_plummer.C
 	mv mk_plummer.C $@
 
-$(PLUMMER_DAT): ./mk_plummer
-	$< -n $(PLUMMER_NUM) > $@
+$(MK_PLUMMER): mk_plummer.cc
+	g++ -o $@ $<
+
+$(PLUMMER_DAT): $(MK_PLUMMER)
+	$(MK_PLUMMER) -n $(PLUMMER_NUM) > $@
 
 $(OUT_DIR):
 	mkdir $@
