@@ -15,6 +15,8 @@ FMT_PNG		= $(FMT).png
 
 DAT2POV		= ./dat2pov.rb
 RENDER		= ./render.rb
+RENDER_WIDTH= 800
+RENDER_HEIGHT=600
 
 MK_PLUMMER	= ./mk_plummer
 PLUMMER_NUM	= 1000
@@ -57,7 +59,7 @@ pov:
 	$(DAT2POV)
 
 render:
-	$(RENDER)
+	$(RENDER) $(OUT_DIR) $(RENDER_WIDTH) $(RENDER_HEIGHT)
 
 gif: $(POVRAY_GIF)
 
