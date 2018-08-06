@@ -8,6 +8,14 @@ def slide(fname, d_vec)
 	num = 0
 	time = 0.0
 	lines = []
+
+	puts "slide"
+	print "d_vec: "
+	for v in d_vec
+		print "#{v}, "
+	end
+	puts ""
+
 	org = File.open(fname, "r"){|f|
 		num = f.gets.to_i
 		time = f.gets.to_f
@@ -15,6 +23,9 @@ def slide(fname, d_vec)
 	}
 	fname = fname.gsub(/.dat/, "")
 	fname += "-slide.dat"
+
+	puts "generating #{fname} ..."
+
 	file = File.open(fname, "w")
 
 	file.puts(num)
@@ -25,12 +36,10 @@ def slide(fname, d_vec)
 		mass = dat[0]
 		pos = []
 		vec = []
-		pos[0] = dat[1] + d_vec[0]
-		pos[1] = dat[2] + d_vec[1]
-		pos[2] = dat[3] + d_vec[2]
-		vec[0] = dat[4]
-		vec[1] = dat[5]
-		vec[2] = dat[6]
+		for i in 0..2
+			pos[i] = dat[i+1].to_f + d_vec[i]
+			vec[i] = dat[i+3].to_f + d_vec[i+3]
+		end
 		l = "#{mass} #{pos[0]} #{pos[1]} #{pos[2]} #{vec[0]} #{vec[1]} #{vec[2]}"
 
 		file.puts(l)
@@ -74,11 +83,15 @@ if ARGV.size() == 0
 	puts "1: slide"
 	puts "2: merge"
 elsif ARGV[0] == "slide"
-	if ARGV.size() == 5
-		slide(ARGV[1], [ARGV[2],ARGV[3],ARGV[4]])
+	if ARGV.size() == 8
+		slide(ARGV[1], [ARGV[2].to_f, ARGV[3].to_f, ARGV[4].to_f, ARGV[5].to_f, ARGV[6].to_f, ARGV[7].to_f])
+	else
+		puts "error"
 	end
 elsif ARGV[0] == "merge"
 	if ARGV.size() == 3
 		merge(ARGV[1], ARGV[2])
+	else
+		puts "error"
 	end
 end

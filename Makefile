@@ -61,6 +61,10 @@ pov:
 render:
 	$(RENDER) $(OUT_DIR) $(RENDER_WIDTH) $(RENDER_HEIGHT)
 
+rerender:
+	make pov
+	make render
+
 gif: $(POVRAY_GIF)
 
 mp4: $(POVRAY_MP4)

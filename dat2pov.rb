@@ -25,7 +25,7 @@ def dat2pov(fname, cam)
 				pos[0] = dat[1]
 				pos[1] = dat[2]
 				pos[2] = dat[3]
-				l = "SP(" + ("<#{pos[0]},#{pos[1]},#{pos[2]}>") + ",0.01)"
+				l = "SP(" + ("<#{pos[0]},#{pos[1]},#{pos[2]}>") + ",0.05)"
 				pov.puts(l)
 			end
 		else
@@ -42,12 +42,12 @@ if ARGV.size() == 0 then
 	puts "num: #{num}"
 	Parallel.each([*0..num], progress: "converting dat->pov", in_processes: 4) {|n|
 		fname = "out/" + ("%010d" % n) + ".dat"
-		cam = [20.0, 0.0, 3.0]
-		cam[0] -= 30.0 * (n.to_f/num)
+		cam = [0.0, 0.0, 30.0]
+		#cam[0] -= 30.0 * (n.to_f/num)
 		#puts "n: #{n}, num: #{num}, cam[0]: #{cam[0]}"
 		dat2pov fname, cam
 	}
 	print "done."
 else
-	dat2pov ARGV[0], [10.0, 0.0, 0.0]
+	dat2pov ARGV[0], [0.0, 0.0, 30.0]
 end

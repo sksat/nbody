@@ -4,8 +4,8 @@ cmd = sprintf("head -n1 %s", frame)
 set xrange[-size/2:size/2]
 set yrange[-size/2:size/2]
 set zrange[-size/2:size/2]
-#plot frame every ::2 u 2:3 w p title system(cmd)
-splot frame every ::2 u 2:3:4 w p title system(cmd)
+plot frame every ::2 u 2:3 w p title system(cmd)
+#splot frame every ::2 u 2:3:4 w p title system(cmd)
 n = n + dn
 if(n < n1) reread
 undefine n
