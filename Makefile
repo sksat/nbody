@@ -15,8 +15,23 @@ FMT_PNG		= $(FMT).png
 
 DAT2POV		= ./dat2pov.rb
 RENDER		= ./render.rb
-RENDER_WIDTH= 800
-RENDER_HEIGHT=600
+RENDER_SIZE_= 800x600
+
+ifeq ($(RENDER_QUALITY),SD)
+	RENDER_SIZE_ := 640x480
+else ifeq ($(RENDER_QUALITY),HD)
+	RENDER_SIZE_ := 1280x720
+else ifeq ($(RENDER_QUALITY),FHD)
+	RENDER_SIZE_ := 1920x1080
+else ifeq ($(RENDER_QUALITY),4K)
+	RENDER_SIZE_ := 3840x2160
+endif
+
+ifndef RENDER_SIZE
+	RENDER_SIZE := $(subst x, ,$(RENDER_SIZE_))
+endif
+RENDER_WIDTH=$(firstword $(RENDER_SIZE))
+RENDER_HEIGHT=$(lastword $(RENDER_SIZE))
 
 MK_PLUMMER	= ./mk_plummer
 PLUMMER_NUM	= 1000
@@ -35,6 +50,9 @@ ANIM_SIZE	= 10
 
 POVRAY_GIF	= $(OUT_DIR)povray.gif
 POVRAY_MP4	= $(OUT_DIR)povray.mp4
+
+INPUT_FPS	= 60
+OUTPUT_FPS	= 60
 
 %.o : %.cc
 	$(CXX) -c $< $(CXXFLAGS) -o $@
@@ -99,7 +117,7 @@ $(PLOT_GIF):
 	gnuplot -c anim.gp $(D_ANIM) $(ANIM_SIZE)
 
 $(POVRAY_GIF):
-	ffmpeg -r 30 -i $(FMT_PNG) -r 60 $(POVRAY_GIF)
+	ffmpeg -r $(INPUT_FPS) -i $(FMT_PNG) -r $(OUTPUT_FPS) $(POVRAY_GIF)
 
 $(POVRAY_MP4):
-	ffmpeg -r 30 -i $(FMT_PNG) -vcodec libx264 -pix_fmt yuv420p -r 60 $(POVRAY_MP4)
+	ffmpeg -r $(INPUT_FPS) -i $(FMT_PNG) -vcodec libx264 -pix_fmt yuv420p -r $(OUTPUT_FPS) $(POVRAY_MP4)
