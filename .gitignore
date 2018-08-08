@@ -37,6 +37,7 @@ mk_plummer.cc
 # Executables
 nbody
 mk_plummer
+check_energy
 *.exe
 *.out
 *.app
