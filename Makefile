@@ -3,7 +3,7 @@ OBJS		= main.o common.o
 
 CXX			= g++
 CXXFLAGS	= -std=c++1z -Wall -O3 -fopenmp
-LDFLAGS		= -fopenmp
+LDFLAGS		= -std=c++1z -fopenmp -lstdc++fs
 
 OUT_DIR		= out/
 NUM_DIGITS	= 10
@@ -68,7 +68,9 @@ run: $(RUN_DEP)
 	$(TARGET) $(RUN_FLAGS)
 
 check: $(CHECK_ENERGY)
-	$(CHECK_ENERGY) $(OUT_DIR)
+	$(CHECK_ENERGY) $(OUT_DIR) > energy
+	echo -e "set terminal png\nset output \"energy.png\"\nplot \"energy\" w l" | gnuplot
+	rm energy
 
 plot: $(PLOT_GIF)
 
@@ -119,7 +121,7 @@ $(OUT_DIR):
 	mkdir $@
 
 $(CHECK_ENERGY): $(CHECK_ENERGY_OBJS)
-	$(CXX) -o $@ $^
+	$(CXX) -o $@ $^ $(LDFLAGS)
 
 $(PLOT_GIF):
 	gnuplot -c anim.gp $(D_ANIM) $(ANIM_SIZE)
