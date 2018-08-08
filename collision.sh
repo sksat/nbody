@@ -1,5 +1,6 @@
 #!/bin/sh
-num=500
+num=$1
+echo "num: $num"
 
 rm *.dat
 ./mk_plummer -n $num > plummer-$num.dat
