@@ -13,6 +13,8 @@ FMT_DAT		= $(FMT).dat
 FMT_POV		= $(FMT).pov
 FMT_PNG		= $(FMT).png
 
+CHECK_ENERGY= ./check_energy
+CHECK_ENERGY_OBJS = check_energy.o common.o
 DAT2POV		= ./dat2pov.rb
 RENDER		= ./render.rb
 RENDER_SIZE_= 800x600
@@ -65,6 +67,9 @@ run: $(RUN_DEP)
 	make clean_data
 	$(TARGET) $(RUN_FLAGS)
 
+check: $(CHECK_ENERGY)
+	$(CHECK_ENERGY) $(OUT_DIR)
+
 plot: $(PLOT_GIF)
 
 replot: clean_gif plot
@@ -105,13 +110,16 @@ mk_plummer.cc:
 	mv mk_plummer.C $@
 
 $(MK_PLUMMER): mk_plummer.cc
-	g++ -o $@ $<
+	$(CXX) -o $@ $<
 
 $(PLUMMER_DAT): $(MK_PLUMMER)
 	$(MK_PLUMMER) -n $(PLUMMER_NUM) > $@
 
 $(OUT_DIR):
 	mkdir $@
+
+$(CHECK_ENERGY): $(CHECK_ENERGY_OBJS)
+	$(CXX) -o $@ $^
 
 $(PLOT_GIF):
 	gnuplot -c anim.gp $(D_ANIM) $(ANIM_SIZE)

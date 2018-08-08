@@ -23,6 +23,7 @@ struct simdata_t {
 
 inline std::string out_dir		= "out/";
 inline std::size_t num_digits	= 10;
+inline bool flag_print			= true;
 
 void err_exit(const std::string& msg);
 

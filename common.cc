@@ -13,12 +13,13 @@ void load_data(const std::string& fname, simdata_t& data){
 	file >> data.num >> data.time;
 	if(file.fail()) err_exit("fail");
 
-	std::cout << "number of particle: " << data.num << std::endl
-		<< "simulation time: " << data.time << std::endl;
+	if(flag_print)
+		std::cout << "number of particle: " << data.num << std::endl
+			<< "simulation time: " << data.time << std::endl;
 
 	data.planet.reserve(data.num);
 
-	std::cout << "loading...\t";
+	if(flag_print) std::cout << "loading...\t";
 	for(size_t n=0; n<data.num; n++){
 		auto& p = data.planet[n];
 		file >> p.mass
@@ -26,7 +27,7 @@ void load_data(const std::string& fname, simdata_t& data){
 			>> p.vel.x >> p.vel.y >> p.vel.z;
 		if(file.fail()) err_exit("failed.");
 	}
-	std::cout << "finished." << std::endl;
+	if(flag_print) std::cout << "finished." << std::endl;
 }
 
 void save_data(const std::size_t& count, const simdata_t& data){
