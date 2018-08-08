@@ -10,7 +10,7 @@ nproc = `nproc`.to_i
 puts "nproc: #{nproc}"
 
 if ARGV.size() == 3
-	num = `find #{ARGV[0]} -type f -name "*.dat" | sort | tail -n1 | sed -e 's/[^0-9]//g'`.to_i
+	num = `find #{ARGV[0]} -type f -name "*.pov" | sort | tail -n1 | sed -e 's/[^0-9]//g'`.to_i
 elsif ARGV.size() == 4
 	num = ARGV[3].to_i
 else
