@@ -1,5 +1,5 @@
 TARGET		= ./nbody
-OBJS		= main.o
+OBJS		= main.o common.o
 
 CXX			= g++
 CXXFLAGS	= -std=c++1z -Wall -O3 -fopenmp

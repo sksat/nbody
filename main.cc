@@ -1,36 +1,10 @@
-#include <iostream>
-#include <iomanip>
-#include <sstream>
-#include <fstream>
-#include <vector>
 #include <chrono>
 #include <cmath>
-#include <sksat/math/vector.hpp>
-
-using Float = double; // 浮動小数点数
-
-struct planet_t {
-	sksat::math::vector<Float> pos, vel, acc[2];
-	Float mass;
-};
-
-struct simdata_t {
-	size_t num; // number of particle
-	Float time; // simulation time
-	std::vector<planet_t> planet;
-};
+#include "common.hpp"
 
 Float time_max		= 1000.0;
 Float dt		= 0.0001;
 
-std::string out_dir	= "out/";
-int num_digits		= 10;
-
-// util
-void err_exit(const std::string& msg);
-
-void load_data(const std::string& fname, simdata_t& data);
-void save_data(const size_t &count, const simdata_t& data);
 void main_loop(simdata_t& sim);
 
 int main(int argc, char **argv){
@@ -62,52 +36,6 @@ int main(int argc, char **argv){
 	std::cout<<"time "
 		<< static_cast<double>(diff.count())/1000<<" sec"<<std::endl;
 	std::cout<<"simulation end"<<std::endl;
-}
-
-void err_exit(const std::string& msg){
-	std::cerr<<msg<<std::endl;
-	exit(-1);
-}
-
-void load_data(const std::string& fname, simdata_t& data){
-	std::ifstream ifs(fname);
-
-	if(!ifs) err_exit("cannot open file: \"" + fname + "\"");
-	ifs >> data.num >> data.time;
-	if(ifs.fail()) err_exit("fail");
-
-	std::cout << "number of particle: " << data.num << std::endl
-		<< "simulation time: " << data.time << std::endl;
-
-	data.planet.reserve(data.num);
-
-	std::cout << "loading...\t";
-	for(size_t n=0;n<data.num;n++){
-		auto& p = data.planet[n];
-		ifs >> p.mass
-			>> p.pos.x >> p.pos.y >> p.pos.z
-			>> p.vel.x >> p.vel.y >> p.vel.z;
-		if(ifs.fail()) err_exit("failed");
-	}
-	std::cout<<"finished"<<std::endl;
-}
-
-void save_data(const size_t& count, const simdata_t& data){
-	std::stringstream ss;
-	ss << out_dir
-		<< std::setfill('0') << std::setw(num_digits) << count
-		<< ".dat";
-	std::ofstream ofs(ss.str());
-	ofs << data.num << std::endl
-		<< data.time << std::endl;
-
-	for(size_t n=0;n<data.num;n++){
-		const auto& p = data.planet[n];
-		ofs << p.mass << " "
-			<< p.pos.x << " " << p.pos.y << " " << p.pos.z << " "
-			<< p.vel.x << " " << p.vel.y << " " << p.vel.z
-			<< std::endl;
-	}
 }
 
 void main_loop(simdata_t &sim){
