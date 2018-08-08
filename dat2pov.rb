@@ -29,7 +29,7 @@ def dat2pov(fname, cam)
 				pov.puts(l)
 			end
 		else
-			puts "#{fname} exist"
+			#puts "#{fname} exist"
 		end
 	rescue => error
 		print error
@@ -39,7 +39,7 @@ end
 
 if ARGV.size() == 0 then
 	num = `find out -type f -name "*dat" | sort | tail -n1 | sed -e 's/[^0-9]//g'`.to_i
-	puts "num: #{num}"
+	#puts "num: #{num}"
 	Parallel.each([*0..num], progress: "converting dat->pov", in_processes: 4) {|n|
 		fname = "out/" + ("%010d" % n) + ".dat"
 		cam = [0.0, 0.0, 30.0]

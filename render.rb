@@ -32,7 +32,7 @@ Parallel.each([*0..num], progress: "rendering pov", in_processes: nproc) {|n|
 		puts "pov file not found."+png
 		exit -1
 	elsif File.exist?(png)
-		puts "png file exist: "+pov
+		#puts "png file exist: "+pov
 	else
 		ret = system("povray +W#{width} +H#{height} #{pov} 2> /dev/null")
 		if ret != true
