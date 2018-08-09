@@ -44,11 +44,11 @@ void check_energy(const std::string& fname){
 			auto& p2 = data.planet[n2];
 			auto r   = p2.pos - p1.pos;
 			auto r2  = r.x*r.x + r.y*r.y + r.z*r.z;
-			if(r2!=0.0) pe += -1.0 * (p2.mass / std::sqrt(r2));
+			if(r2!=0.0) pe += -1.0 * (p1.mass * p2.mass / std::sqrt(r2));
 		}
 	}
 	ke = 0.5 * ke;
 	pe = 0.5 * pe;
-	std::cerr << "ke: " << ke << ", pe: " << pe << std::endl;
-	std::cout << ke + pe << std::endl;
+	//std::cerr << "ke: " << ke << ", pe: " << pe << std::endl;
+	std::cout << ke << " " << pe << " " << ke + pe << std::endl;
 }
