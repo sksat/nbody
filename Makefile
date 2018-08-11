@@ -68,9 +68,8 @@ run: $(RUN_DEP)
 	$(TARGET) $(RUN_FLAGS)
 
 check: $(CHECK_ENERGY)
-	$(CHECK_ENERGY) $(OUT_DIR) > energy
-	echo -e "set terminal png\nset output \"energy.png\"\nplot \"energy\" w l" | gnuplot
-	rm energy
+	$(CHECK_ENERGY) $(OUT_DIR) > energy.log
+	echo -e "set terminal png\nplot \"energy.log\" u 1:2 w l title \"運動エネルギー\"\nreplot \"energy.log\" u 1:3 w l title \"ポテンシャルエネルギー\"\nreplot \"energy.log\" u 1:4 w l title \"合計\"\nset output \"e.png\"\nreplot" | gnuplot
 
 plot: $(PLOT_GIF)
 
