@@ -59,7 +59,7 @@ void main_loop(simdata_t &sim){
 			auto& p1 = sim.planet[n1];
 			auto& acc= p1.acc[lf_flag];
 			acc = {};
-			#pragma omp parallel for
+			#pragma omp parallel for shared(acc)
 			for(size_t n2=0;n2<sim.num;n2++){
 				if(n1 == n2) continue;
 				auto& p2 = sim.planet[n2];
