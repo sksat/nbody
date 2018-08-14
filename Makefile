@@ -129,4 +129,4 @@ $(POVRAY_GIF):
 	ffmpeg -r $(INPUT_FPS) -i $(FMT_PNG) -r $(OUTPUT_FPS) $(POVRAY_GIF)
 
 $(POVRAY_MP4):
-	ffmpeg -r $(INPUT_FPS) -i $(FMT_PNG) -vcodec libx264 -pix_fmt yuv420p -r $(OUTPUT_FPS) $(POVRAY_MP4)
+	ffmpeg -r $(INPUT_FPS) -i $(FMT_PNG) -vcodec libx264 -pix_fmt yuv420p -r $(OUTPUT_FPS) $(POVRAY_MP4) -vb 50000k -s:v $(RENDER_SIZE_)
