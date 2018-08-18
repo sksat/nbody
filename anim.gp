@@ -1,4 +1,3 @@
-set nokey
 set term gif animate
 set output "out.gif"
 set size ratio 1
@@ -13,6 +12,6 @@ set zrange[-size*0.5:size*0.5]
 
 while(n<=n1) {
 	frame = sprintf("%s/%010d.dat", ARG1, n)
-	plot frame every ::2 u 2:3 w p
+	plot frame every ::2 u 2:3 w p title system("head -n2 ".frame." | tail -n1")
 	n = n + dn
 }
