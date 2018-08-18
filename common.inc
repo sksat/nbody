@@ -17,11 +17,11 @@ light_source{
 	}
 #end
 
-#macro SP(p, r)
+#macro SP(p, r, col)
 	sphere{
 		p, r
 		pigment {
-			rgbt <1,1,1,0>
+			rgb col
 		}
 	}
 #end

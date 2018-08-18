@@ -80,7 +80,7 @@ full: clean run plot
 autorun: run pov render gif mp4
 
 pov:
-	$(DAT2POV)
+	$(DAT2POV) $(OUT_DIR)
 
 render:
 	$(RENDER) $(OUT_DIR) $(RENDER_WIDTH) $(RENDER_HEIGHT)
@@ -123,7 +123,7 @@ $(CHECK_ENERGY): $(CHECK_ENERGY_OBJS)
 	$(CXX) -o $@ $^ $(LDFLAGS)
 
 $(PLOT_GIF):
-	gnuplot -c anim.gp $(D_ANIM) $(ANIM_SIZE)
+	gnuplot -c anim.gp $(OUT_DIR) $(D_ANIM) $(ANIM_SIZE)
 
 $(POVRAY_GIF):
 	ffmpeg -r $(INPUT_FPS) -i $(FMT_PNG) -r $(OUTPUT_FPS) $(POVRAY_GIF)
