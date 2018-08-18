@@ -3,6 +3,7 @@ out/
 mk_plummer.cc
 *.dat
 *.pov
+*.png
 *.gif
 *.mp4
 
